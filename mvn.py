@@ -30,7 +30,10 @@ def compile_maven_projects(base_directory, log_directory="mvn_logs", maven_optio
             mvn_command_str = ' '.join(mvn_command)
 
             print(f"Executing: {mvn_command_str} in {item_path}")
-
+            
+            # Redirect output to log file
+            full_command = f"{mvn_command_str} > {log_file_path} 2>&1"
+            subprocess.call(full_command, shell=True, cwd=item_path)
 
 def main():
     parser = argparse.ArgumentParser(description="Compile Maven projects.")
