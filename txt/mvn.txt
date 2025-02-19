@@ -20,7 +20,7 @@ def compile_maven_projects(base_directory, log_directory="mvn_logs", maven_optio
             print(f"Compiling Maven project in: {item_path}")
             log_file_path = os.path.join(log_directory, f"{item}.log")
 
-            mvn_command = ['mvn', 'compile', '-X', '-f', os.path.join(item_path, 'pom.xml')]
+            mvn_command = ['mvn', 'compile', '-X']
             if maven_options:
                 mvn_command.extend(maven_options.split())
 
