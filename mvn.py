@@ -20,27 +20,17 @@ def compile_maven_projects(base_directory, log_directory="mvn_logs", maven_optio
             print(f"Compiling Maven project in: {item_path}")
             log_file_path = os.path.join(log_directory, f"{item}.log")
 
-            mvn_command = ['mvn', 'compile', '-X']
+            pom_file_path = os.path.join(item_path, 'pom.xml')
+            mvn_command = ['mvn', 'compile', '-f', pom_file_path, '-X']
             if maven_options:
                 mvn_command.extend(maven_options.split())
 
-            try:
-                # Normalize paths to forward slashes
-                mvn_command = [path.replace("\\", "/") for path in mvn_command]
+            # Normalize paths to forward slashes
+            mvn_command = [path.replace("\\", "/") for path in mvn_command]
+            mvn_command_str = ' '.join(mvn_command)
 
-                result = subprocess.run(mvn_command, cwd=item_path, capture_output=True, text=True, check=True)
-                with open(log_file_path, "w") as log_file:
-                    log_file.write(result.stdout)
-                print(f"Compilation successful for {item_path}. Log saved to {log_file_path}")
+            print(f"Executing: {mvn_command_str} in {item_path}")
 
-            except subprocess.CalledProcessError as e:
-                print(f"Compilation failed for {item_path}")
-                print(e.stderr)
-                if os.path.exists(log_file_path):
-                    with open(log_file_path, "a") as log_file:
-                        log_file.write(e.stderr)
-            except Exception as e:
-                print(f"An error occurred during compilation for {item_path}: {e}")
 
 def main():
     parser = argparse.ArgumentParser(description="Compile Maven projects.")
