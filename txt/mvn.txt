@@ -1,5 +1,6 @@
 import os
 import subprocess
+import argparse
 
 def compile_maven_projects(base_directory, log_directory="mvn_logs", maven_options=None):
     if not os.path.exists(log_directory):
@@ -31,8 +32,20 @@ def compile_maven_projects(base_directory, log_directory="mvn_logs", maven_optio
             except Exception as e:
                 print(f"An error occurred during compilation for {item_path}: {e}")
 
-username = "username"
-base_directory = f'/Users/{username}/Projects/projectname'  # Replace with the actual path to your projects
-log_directory = f"/Users/{username}/Projects/mvn_compile_logs" # Replace with the desired log directory name
-maven_options = '-Dversion=1.1' # Example usage of maven options
-compile_maven_projects(base_directory, log_directory, maven_options)
+def main():
+    parser = argparse.ArgumentParser(description="Compile Maven projects.")
+    parser.add_argument("username", type=str, help="The username for the base directory path.")
+    parser.add_argument("--base_directory", type=str, default="Projects/projectname", help="The base directory containing Maven projects.")
+    parser.add_argument("--log_directory", type=str, default="Projects/mvn_compile_logs", help="The directory to store compilation logs.")
+    parser.add_argument("--maven_options", type=str, default="-Dversion=1.1", help="Maven options to pass to the compile command.")
+
+    args = parser.parse_args()
+
+    base_directory = f'/Users/{args.username}/{args.base_directory}'
+    log_directory = f'/Users/{args.username}/{args.log_directory}'
+    maven_options = args.maven_options
+
+    compile_maven_projects(base_directory, log_directory, maven_options)
+
+if __name__ == "__main__":
+    main()
