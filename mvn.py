@@ -2,6 +2,13 @@ import os
 import subprocess
 import argparse
 
+def get_base_path_from_java_tool_options():
+    java_tool_options = os.environ.get('JAVA_TOOL_OPTIONS', '')
+    for option in java_tool_options.split():
+        if option.startswith('-Duser.home='):
+            return option.split('=')[1]
+    return None
+
 def compile_maven_projects(base_directory, log_directory="mvn_logs", maven_options=None):
     if not os.path.exists(log_directory):
         os.makedirs(log_directory)
@@ -37,16 +44,20 @@ def compile_maven_projects(base_directory, log_directory="mvn_logs", maven_optio
 
 def main():
     parser = argparse.ArgumentParser(description="Compile Maven projects.")
-    parser.add_argument("username", type=str, help="The username for the base directory path.")
-    parser.add_argument("--project_name", type=str, default="projectname", help="The name of the project directory under Projects/.")
-    parser.add_argument("--log_subdirectory", type=str, default="mvn_compile_logs", help="The subdirectory under Projects/ to store compilation logs.")
+    parser.add_argument("--project_name", type=str, default="projectname", help="The name of the project directory under user home.")
+    parser.add_argument("--log_subdirectory", type=str, default="mvn_compile_logs", help="The subdirectory under user home to store compilation logs.")
     parser.add_argument("--maven_options", type=str, default="-Dversion=1.1", help="Maven options to pass to the compile command.")
 
     args = parser.parse_args()
 
+    base_path = get_base_path_from_java_tool_options()
+    if base_path is None:
+        print("JAVA_TOOL_OPTIONS environment variable does not contain user home path.")
+        return
+
     # Use os.path.join to create paths with correct separators
-    base_directory = os.path.join('C:', 'Users', args.username, 'Projects', args.project_name)
-    log_directory = os.path.join('C:', 'Users', args.username, 'Projects', args.log_subdirectory)
+    base_directory = os.path.join(base_path, args.project_name)
+    log_directory = os.path.join(base_path, args.log_subdirectory)
     maven_options = args.maven_options
 
     compile_maven_projects(base_directory, log_directory, maven_options)
