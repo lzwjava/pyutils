@@ -27,8 +27,6 @@ def compile_maven_projects(base_directory, log_directory="mvn_logs", maven_optio
             # Normalize paths to forward slashes
             mvn_command = [path.replace("\\", "/") for path in mvn_command]
             mvn_command_str = ' '.join(mvn_command)
-
-            print(f"Executing: {mvn_command_str} in {item_path}")
             
             # Print the command that would be executed along with output redirection
             print(f"{mvn_command_str} > {log_file_path}")
