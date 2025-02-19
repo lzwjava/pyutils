@@ -13,15 +13,15 @@ def compile_maven_projects(base_directory, log_directory="mvn_logs", maven_optio
             print(f"Compiling Maven project in: {item_path}")
             log_file_path = os.path.join(log_directory, f"{item}.log")
 
-            mvn_command = ['mvn', 'compile', '-X']
+            mvn_command = ['mvn', 'compile', '-X', '-f', os.path.join(item_path, 'pom.xml')]
             if maven_options:
                 mvn_command.extend(maven_options.split())
 
             try:
+                result = subprocess.run(mvn_command, cwd=item_path, capture_output=True, text=True, check=True)
                 with open(log_file_path, "w") as log_file:
-                    result = subprocess.run(mvn_command, cwd=item_path, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True, check=True)
                     log_file.write(result.stdout)
-                    print(f"Compilation successful for {item_path}. Log saved to {log_file_path}")
+                print(f"Compilation successful for {item_path}. Log saved to {log_file_path}")
 
             except subprocess.CalledProcessError as e:
                 print(f"Compilation failed for {item_path}")
