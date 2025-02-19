@@ -19,7 +19,7 @@ def compile_maven_projects(base_directory, log_directory="mvn_logs", maven_optio
 
             try:
                 with open(log_file_path, "w") as log_file:
-                    result = subprocess.run(mvn_command, cwd=item_path, capture_output=True, text=True, check=True)
+                    result = subprocess.run(mvn_command, cwd=item_path, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True, check=True)
                     log_file.write(result.stdout)
                     print(f"Compilation successful for {item_path}. Log saved to {log_file_path}")
 
@@ -35,14 +35,14 @@ def compile_maven_projects(base_directory, log_directory="mvn_logs", maven_optio
 def main():
     parser = argparse.ArgumentParser(description="Compile Maven projects.")
     parser.add_argument("username", type=str, help="The username for the base directory path.")
-    parser.add_argument("--base_directory", type=str, default="Projects/projectname", help="The base directory containing Maven projects.")
-    parser.add_argument("--log_directory", type=str, default="Projects/mvn_compile_logs", help="The directory to store compilation logs.")
+    parser.add_argument("--project_name", type=str, default="projectname", help="The name of the project directory under Projects/.")
+    parser.add_argument("--log_subdirectory", type=str, default="mvn_compile_logs", help="The subdirectory under Projects/ to store compilation logs.")
     parser.add_argument("--maven_options", type=str, default="-Dversion=1.1", help="Maven options to pass to the compile command.")
 
     args = parser.parse_args()
 
-    base_directory = f'/Users/{args.username}/{args.base_directory}'
-    log_directory = f'/Users/{args.username}/{args.log_directory}'
+    base_directory = f'/Users/{args.username}/Projects/{args.project_name}'
+    log_directory = f'/Users/{args.username}/Projects/{args.log_subdirectory}'
     maven_options = args.maven_options
 
     compile_maven_projects(base_directory, log_directory, maven_options)
