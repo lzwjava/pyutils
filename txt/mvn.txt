@@ -1,5 +1,4 @@
 import os
-import subprocess
 import argparse
 
 def get_base_path_from_java_tool_options():
@@ -31,9 +30,8 @@ def compile_maven_projects(base_directory, log_directory="mvn_logs", maven_optio
 
             print(f"Executing: {mvn_command_str} in {item_path}")
             
-            # Redirect output to log file
-            full_command = f"{mvn_command_str} > {log_file_path} 2>&1"
-            subprocess.call(full_command, shell=True, cwd=item_path)
+            # Print the command that would be executed along with output redirection
+            print(f"{mvn_command_str} > {log_file_path}")
 
 def main():
     parser = argparse.ArgumentParser(description="Compile Maven projects.")
