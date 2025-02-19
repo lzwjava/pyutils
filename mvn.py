@@ -41,8 +41,9 @@ def main():
 
     args = parser.parse_args()
 
-    base_directory = f'/Users/{args.username}/Projects/{args.project_name}'
-    log_directory = f'/Users/{args.username}/Projects/{args.log_subdirectory}'
+    # Use os.path.join to create paths with correct separators
+    base_directory = os.path.join('C:', 'Users', args.username, 'Projects', args.project_name)
+    log_directory = os.path.join('C:', 'Users', args.username, 'Projects', args.log_subdirectory)
     maven_options = args.maven_options
 
     compile_maven_projects(base_directory, log_directory, maven_options)
