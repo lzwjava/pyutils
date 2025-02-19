@@ -18,6 +18,9 @@ def compile_maven_projects(base_directory, log_directory="mvn_logs", maven_optio
                 mvn_command.extend(maven_options.split())
 
             try:
+                # Normalize paths to forward slashes
+                mvn_command = [path.replace("\\", "/") for path in mvn_command]
+
                 result = subprocess.run(mvn_command, cwd=item_path, capture_output=True, text=True, check=True)
                 with open(log_file_path, "w") as log_file:
                     log_file.write(result.stdout)
