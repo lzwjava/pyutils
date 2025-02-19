@@ -31,8 +31,8 @@ def compile_maven_projects(base_directory, log_directory="mvn_logs", maven_optio
             except Exception as e:
                 print(f"An error occurred during compilation for {item_path}: {e}")
 
-
-base_directory = '/Users/username/Projects/projectname'  # Replace with the actual path to your projects
-log_directory = "/Users/username/Projects/mvn_compile_logs" # Replace with the desired log directory name
+username = "username"
+base_directory = f'/Users/{username}/Projects/projectname'  # Replace with the actual path to your projects
+log_directory = f"/Users/{username}/Projects/mvn_compile_logs" # Replace with the desired log directory name
 maven_options = '-Dversion=1.1' # Example usage of maven options
 compile_maven_projects(base_directory, log_directory, maven_options)
